@@ -7,24 +7,20 @@ export default class extends Controller {
         "pagination",
         "resultsInfo",
         "totalCommands",
-        "addForm",
         "addFormContainer",
         "plusIcon",
         "descriptionInput",
         "commandInput",
-        "csrfToken",
         "editDialog",
-        "editForm",
         "editId",
         "editDescription",
         "editCommand",
-        "editCsrfToken",
         "toastContainer",
         "commandTemplate",
     ];
 
     static values = {
-        perPage: { type: Number, default: 50 },
+        perPage: { type: Number, default: 20 },
         minSearch: { type: Number, default: 3 },
     };
 
@@ -32,27 +28,69 @@ export default class extends Controller {
         this.allCommands = [];
         this.filteredCommands = [];
         this.currentPage = 1;
-        this.loadCommands();
+
+        // Déclencher le chargement des commandes via l'API controller
+        // Utiliser requestAnimationFrame pour s'assurer que tous les contrôleurs sont connectés
+        requestAnimationFrame(() => {
+            this.dispatch("requestLoad");
+        });
     }
 
-    async loadCommands() {
-        try {
-            const response = await fetch("/api/commandes");
-            if (!response.ok) throw new Error("Erreur serveur");
-            this.allCommands = await response.json();
-            this.filteredCommands = [...this.allCommands];
-            this.updateTotalCount();
-            this.renderCommands();
-            this.renderPagination();
-        } catch (error) {
-            console.error("Erreur lors du chargement:", error);
-            this.listTarget.innerHTML = `
-                <div class="bg-red-900/30 border border-red-800 text-red-300 px-4 py-3 rounded-lg text-sm">
-                    Erreur lors du chargement des commandes.
-                </div>
-            `;
-        }
+    // === Écouteurs des événements API ===
+
+    onLoaded(event) {
+        this.allCommands = event.detail.commands;
+        this.filteredCommands = [...this.allCommands];
+        this.updateTotalCount();
+        this.renderCommands();
+        this.renderPagination();
     }
+
+    onCreated(event) {
+        const newCmd = event.detail.command;
+        this.allCommands.unshift(newCmd);
+        this.filteredCommands = [...this.allCommands];
+        this.updateTotalCount();
+        this.renderCommands();
+        this.renderPagination();
+
+        // Reset form et fermer
+        this.descriptionInputTarget.value = "";
+        this.commandInputTarget.value = "";
+        this.toggleAddForm();
+
+        this.showToast("Commande ajoutée !");
+    }
+
+    onUpdated(event) {
+        const updatedCmd = event.detail.command;
+        const index = this.allCommands.findIndex((c) => c.id === updatedCmd.id);
+        if (index !== -1) {
+            this.allCommands[index] = updatedCmd;
+        }
+        this.filteredCommands = [...this.allCommands];
+        this.renderCommands();
+
+        this.closeEditDialog();
+        this.showToast("Commande mise à jour !");
+    }
+
+    onDeleted(event) {
+        const id = event.detail.id;
+        this.allCommands = this.allCommands.filter((c) => c.id !== id);
+        this.filteredCommands = this.filteredCommands.filter((c) => c.id !== id);
+        this.updateTotalCount();
+        this.renderCommands();
+        this.renderPagination();
+
+        this.showToast("Commande supprimée !");
+    }
+
+    onError(event) {
+        this.showToast(event.detail.message, "error");
+    }
+
+    // === Méthodes UI ===
 
     updateTotalCount() {
         const count = this.allCommands.length;
@@ -64,12 +102,10 @@ export default class extends Controller {
         const clone = template.content.cloneNode(true);
         const element = clone.querySelector(".command-item");
 
-        // Remplir les données
         element.dataset.id = cmd.id;
         element.querySelector('[data-role="description"]').textContent = cmd.description;
         element.querySelector('[data-role="command"]').textContent = cmd.command;
 
-        // Ajouter les data attributes aux boutons
         const copyBtn = element.querySelector(".copy-btn");
         copyBtn.dataset.command = cmd.command;
 
@@ -81,7 +117,6 @@ export default class extends Controller {
         const deleteBtn = element.querySelector(".delete-btn");
         deleteBtn.dataset.id = cmd.id;
 
-        // Gérer la visibilité
         if (!isVisible) {
             element.classList.add("hidden");
         }
@@ -123,7 +158,7 @@ export default class extends Controller {
         const nav = document.createElement("nav");
         nav.className = "flex items-center gap-2";
 
-        // Bouton precedent
+        // Bouton précédent
         const prevBtn = document.createElement("button");
         prevBtn.className = `p-2 rounded-lg transition-all duration-300 ${
             this.currentPage === 1
@@ -134,7 +169,7 @@ export default class extends Controller {
             '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
         prevBtn.dataset.page = this.currentPage - 1;
         prevBtn.disabled = this.currentPage === 1;
-        prevBtn.dataset.action = "click->commands#goToPage";
+        prevBtn.dataset.action = "click->commands-ui#goToPage";
         nav.appendChild(prevBtn);
 
         // Pages
@@ -147,7 +182,7 @@ export default class extends Controller {
             }`;
             pageBtn.textContent = i;
             pageBtn.dataset.page = i;
-            pageBtn.dataset.action = "click->commands#goToPage";
+            pageBtn.dataset.action = "click->commands-ui#goToPage";
             nav.appendChild(pageBtn);
         }
 
@@ -162,7 +197,7 @@ export default class extends Controller {
             '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
         nextBtn.dataset.page = this.currentPage + 1;
         nextBtn.disabled = this.currentPage === totalPages;
-        nextBtn.dataset.action = "click->commands#goToPage";
+        nextBtn.dataset.action = "click->commands-ui#goToPage";
         nav.appendChild(nextBtn);
 
         this.paginationTarget.appendChild(nav);
@@ -199,65 +234,26 @@ export default class extends Controller {
         const isOpen = container.classList.contains("grid-rows-[1fr]");
 
         if (isOpen) {
-            // Fermeture
             container.classList.remove("grid-rows-[1fr]");
             container.classList.add("grid-rows-[0fr]");
             this.plusIconTarget.style.transform = "rotate(0deg)";
 
-            // Reset la hauteur des textareas
             this.descriptionInputTarget.style.height = "auto";
             this.commandInputTarget.style.height = "auto";
         } else {
-            // Ouverture
             container.classList.remove("grid-rows-[0fr]");
             container.classList.add("grid-rows-[1fr]");
             this.plusIconTarget.style.transform = "rotate(45deg)";
         }
     }
 
-    async addCommand(event) {
+    submitAddForm(event) {
         event.preventDefault();
 
         const description = this.descriptionInputTarget.value.trim();
         const command = this.commandInputTarget.value.trim();
-        const csrfToken = this.csrfTokenTarget.value;
 
-        if (!description || !command) {
-            this.showToast("Description et commande requises", "error");
-            return;
-        }
-
-        try {
-            const response = await fetch("/api/new", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ description, command, _csrf_token: csrfToken }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Erreur lors de l'ajout");
-            }
-
-            // Ajouter la commande en debut de liste
-            const newCmd = { id: data.id, description: data.description, command: data.command };
-            this.allCommands.unshift(newCmd);
-            this.filteredCommands = [...this.allCommands];
-            this.updateTotalCount();
-            this.renderCommands();
-            this.renderPagination();
-
-            // Reset form
-            this.descriptionInputTarget.value = "";
-            this.commandInputTarget.value = "";
-            this.toggleAddForm();
-
-            this.showToast("Commande ajoutée !");
-        } catch (error) {
-            console.error("Erreur:", error);
-            this.showToast(error.message, "error");
-        }
+        this.dispatch("requestCreate", { detail: { description, command } });
     }
 
     async copy(event) {
@@ -276,9 +272,7 @@ export default class extends Controller {
         this.editIdTarget.value = btn.dataset.id;
         this.editDescriptionTarget.value = btn.dataset.description;
         this.editCommandTarget.value = btn.dataset.command;
-        this.editCsrfTokenTarget.value = this.csrfTokenTarget.value;
 
-        // Reset la hauteur des textareas
         this.editDescriptionTarget.style.height = "auto";
         this.editCommandTarget.style.height = "auto";
 
@@ -288,87 +282,28 @@ export default class extends Controller {
     closeEditDialog() {
         this.editDialogTarget.close();
 
-        // Reset la hauteur des textareas pour la prochaine ouverture
         this.editDescriptionTarget.style.height = "auto";
         this.editCommandTarget.style.height = "auto";
     }
 
-    async submitEdit(event) {
+    submitEditForm(event) {
         event.preventDefault();
 
         const id = this.editIdTarget.value;
         const description = this.editDescriptionTarget.value.trim();
         const command = this.editCommandTarget.value.trim();
-        const csrfToken = this.editCsrfTokenTarget.value;
 
-        if (!description || !command) {
-            this.showToast("Description et commande requises", "error");
-            return;
-        }
-
-        try {
-            const response = await fetch(`/api/update/${id}`, {
-                method: "PATCH",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ description, command, _csrf_token: csrfToken }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Erreur lors de la modification");
-            }
-
-            // Mettre a jour la commande dans la liste
-            const index = this.allCommands.findIndex((c) => c.id === parseInt(id));
-            if (index !== -1) {
-                this.allCommands[index] = { id: parseInt(id), description, command };
-            }
-            this.filteredCommands = [...this.allCommands];
-            this.renderCommands();
-
-            this.closeEditDialog();
-            this.showToast("Commande mise à jour !");
-        } catch (error) {
-            console.error("Erreur:", error);
-            this.showToast(error.message, "error");
-        }
+        this.dispatch("requestUpdate", { detail: { id, description, command } });
     }
 
-    async deleteCommand(event) {
+    confirmDelete(event) {
         const id = event.currentTarget.dataset.id;
 
         if (!confirm("Voulez-vous vraiment supprimer cette commande ?")) {
             return;
         }
 
-        const csrfToken = this.csrfTokenTarget.value;
-
-        try {
-            const response = await fetch(`/api/delete/${id}`, {
-                method: "DELETE",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ _csrf_token: csrfToken }),
-            });
-
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.message || "Erreur lors de la suppression");
-            }
-
-            // Supprimer de la liste
-            this.allCommands = this.allCommands.filter((c) => c.id !== parseInt(id));
-            this.filteredCommands = this.filteredCommands.filter((c) => c.id !== parseInt(id));
-            this.updateTotalCount();
-            this.renderCommands();
-            this.renderPagination();
-
-            this.showToast("Commande supprimée !");
-        } catch (error) {
-            console.error("Erreur:", error);
-            this.showToast(error.message, "error");
-        }
+        this.dispatch("requestDelete", { detail: { id } });
     }
 
     showToast(message, type = "success") {

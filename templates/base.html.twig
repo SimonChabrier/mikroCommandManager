@@ -25,7 +25,8 @@
     </head>
     <body
         class="bg-gray-950 text-gray-100 font-sans min-h-screen flex flex-col"
-        data-controller="commands"
+        data-controller="commands-ui commands-api"
+        data-action="commands-ui:requestLoad->commands-api#loadCommands commands-ui:requestCreate->commands-api#create commands-ui:requestUpdate->commands-api#update commands-ui:requestDelete->commands-api#delete commands-api:loaded->commands-ui#onLoaded commands-api:created->commands-ui#onCreated commands-api:updated->commands-ui#onUpdated commands-api:deleted->commands-ui#onDeleted commands-api:error->commands-ui#onError"
     >
         {% block body %}{% endblock %}
     </body>
