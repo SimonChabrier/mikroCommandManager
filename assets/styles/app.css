@@ -4,16 +4,36 @@
     resize: vertical;
     min-height: 36px;
 }
-.collapsible-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-out;
-}
-.collapsible-content.open {
-    max-height: 300px;
-}
 .glow-input:focus {
     box-shadow:
         0 0 0 1px rgba(59, 130, 246, 0.5),
         0 0 20px rgba(59, 130, 246, 0.15);
+}
+
+dialog {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0;
+    width: 90%;
+    max-width: 500px;
+}
+
+@media (min-width: 768px) {
+    dialog {
+        width: 70%;
+        max-width: 600px;
+    }
+}
+
+@media (min-width: 1024px) {
+    dialog {
+        width: 50%;
+        max-width: 700px;
+    }
+}
+
+dialog::backdrop {
+    background-color: rgba(0, 0, 0, 0.5);
 }
