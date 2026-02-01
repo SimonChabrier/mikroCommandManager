@@ -28,6 +28,7 @@ export default class extends Controller {
         this.allCommands = [];
         this.filteredCommands = [];
         this.currentPage = 1;
+        this.searchTimeout = null;
 
         // Déclencher le chargement des commandes via l'API controller
         // Utiliser requestAnimationFrame pour s'assurer que tous les contrôleurs sont connectés
@@ -216,17 +217,21 @@ export default class extends Controller {
 
     search(event) {
         const query = event.target.value;
-        if (query.length < this.minSearchValue) {
-            this.filteredCommands = [...this.allCommands];
-        } else {
-            const lowerQuery = query.toLowerCase();
-            this.filteredCommands = this.allCommands.filter(
-                (cmd) => cmd.description.toLowerCase().includes(lowerQuery) || cmd.command.toLowerCase().includes(lowerQuery),
-            );
-        }
-        this.currentPage = 1;
-        this.renderCommands();
-        this.renderPagination();
+
+        clearTimeout(this.searchTimeout);
+        this.searchTimeout = setTimeout(() => {
+            if (query.length < this.minSearchValue) {
+                this.filteredCommands = [...this.allCommands];
+            } else {
+                const lowerQuery = query.toLowerCase();
+                this.filteredCommands = this.allCommands.filter(
+                    (cmd) => cmd.description.toLowerCase().includes(lowerQuery) || cmd.command.toLowerCase().includes(lowerQuery),
+                );
+            }
+            this.currentPage = 1;
+            this.renderCommands();
+            this.renderPagination();
+        }, 250);
     }
 
     toggleAddForm() {
