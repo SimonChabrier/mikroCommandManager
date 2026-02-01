@@ -31,9 +31,29 @@ php bin/console doctrine:database:create
 php bin/console doctrine:migrations:migrate
 ```
 
-## Lancement
+## Lancement en local :
 
 ```bash
 symfony server:start
+```
+
+## Note :
+
+`.symfony.local.yaml - gère les workers`
+
+```yaml
+workers:
+    # lance le worker tailwind en mode watch pour recompiler les assets à la volée
+    # installer avant bin/console tailwind:build --watch
+    tailwind:
+        cmd: ["symfony", "console", "tailwind:build", "--watch"]
+```
+
+## Prod :
+
+```bash
+composer install --no-dev --optimize-autoloader
+bin/console tailwind:build --minify
+bin/console asset-map:compile 
 ```
 
