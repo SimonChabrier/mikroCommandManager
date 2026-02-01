@@ -1,0 +1,16 @@
+{
+    "plugins": ["@destination/prettier-plugin-twig"],
+    "printWidth": 160,
+    "tabWidth": 4,
+    "useTabs": false,
+    "singleQuote": false,
+    "twigSingleQuote": true,
+    "embeddedSingleQuote": true,
+    "bracketSameLine": false,
+    "htmlWhitespaceSensitivity": "css",
+    "singleLineLinkTags": false,
+    "indentSchema": true,
+    "indentAttributes": true,
+    "formatonSave": true,
+    "formatonPaste": true
+}

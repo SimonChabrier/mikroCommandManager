@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+#description-input {
+    resize: vertical;
+    min-height: 36px;
+}
+.collapsible-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease-out;
+}
+.collapsible-content.open {
+    max-height: 300px;
+}
+.glow-input:focus {
+    box-shadow:
+        0 0 0 1px rgba(59, 130, 246, 0.5),
+        0 0 20px rgba(59, 130, 246, 0.15);
+}

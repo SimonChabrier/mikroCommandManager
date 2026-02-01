@@ -1,0 +1,5 @@
+workers:
+    # lance le worker tailwind en mode watch pour recompiler les assets à la volée
+    # installer avant bin/console tailwind:build --watch
+    tailwind:
+        cmd: ["symfony", "console", "tailwind:build", "--watch"]

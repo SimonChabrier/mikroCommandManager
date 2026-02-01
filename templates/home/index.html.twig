@@ -1,0 +1,109 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mikro Command Manager{% endblock %}
+
+{% block body %}
+    <div class="flex-1 container mx-auto px-4 py-6 max-w-3xl">
+        <!-- Header -->
+        <div class="flex items-center gap-3 mb-6">
+            <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+            </div>
+            <h1 class="text-xl font-semibold text-white">Mikro Command Manager</h1>
+        </div>
+
+        <!-- Barre d'outils compacte -->
+        <div class="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-3 mb-5">
+            <div class="flex flex-col sm:flex-row gap-3">
+                <!-- Recherche -->
+                <div class="flex-1 relative">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                    <input
+                        type="text"
+                        class="w-full bg-gray-800/50 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-500 glow-input transition-all"
+                        id="search-input"
+                        placeholder="Rechercher (min. 3 car.)"
+                    >
+                </div>
+
+                <!-- Toggle ajout -->
+                <button
+                    id="toggle-add-form"
+                    class="group relative bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105"
+                    title="Ajouter une commande"
+                >
+                    <svg id="plus-icon" class="w-5 h-5 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Formulaire d'ajout (collapsible) -->
+            <div id="add-form-container" class="collapsible-content">
+                <form id="add-form" class="pt-3 mt-3 border-t border-gray-800">
+                    <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('command_form') }}">
+                    <div class="grid sm:grid-cols-2 gap-3">
+                        <div>
+                            <label for="description-input" class="block text-xs font-medium text-gray-400 mb-1">Description</label>
+                            <textarea
+                                class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-500 glow-input transition-all"
+                                id="description-input"
+                                rows="1"
+                                placeholder="Ex: Lister les fichiers"
+                                required
+                            ></textarea>
+                        </div>
+                        <div>
+                            <label for="command-input" class="block text-xs font-medium text-gray-400 mb-1">Commande</label>
+                            <input
+                                type="text"
+                                class="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-100 placeholder-gray-500 focus:outline-none focus:border-blue-500 glow-input transition-all font-mono"
+                                id="command-input"
+                                placeholder="Ex: ls -la"
+                                required
+                            >
+                        </div>
+                    </div>
+                    <button
+                        type="submit"
+                        class="w-full mt-3 flex items-center justify-center gap-2 bg-gradient-to-r from-green-600 to-emerald-500 hover:from-green-500 hover:to-emerald-400 text-white py-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-green-500/30 hover:scale-[1.02]"
+                        title="Enregistrer"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Informations sur les résultats -->
+        <p id="results-info" class="text-gray-500 text-xs mb-3"></p>
+
+        <!-- Liste des commandes -->
+        <div id="commands-list" class="space-y-2 mb-6"></div>
+
+        <!-- Pagination -->
+        <div id="pagination" class="flex justify-center"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="border-t border-gray-800 bg-gray-900/30 backdrop-blur">
+        <div class="container mx-auto px-4 py-3 max-w-3xl">
+            <div class="flex items-center justify-between text-xs text-gray-500">
+                <div class="flex items-center gap-2">
+                    <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                    <span id="total-commands">0 commandes</span>
+                </div>
+                <span class="font-mono">v1.0</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast container -->
+    <div id="toast-container" class="fixed bottom-16 right-4 space-y-2 z-50"></div>
+{% endblock %}
