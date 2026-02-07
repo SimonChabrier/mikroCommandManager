@@ -34,10 +34,7 @@
                 {# Toggle ajout #}
                 {% if is_granted('ROLE_ADMIN') %}
                     <button
-                        class="
-                            group relative bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-101 w-auto
-                            flex items-center justify-center gap-1 sm:w-px-10
-                        "
+                        class="group relative bg-gray-800/50 hover:bg-gray-700/50 text-gray-400 hover:text-white py-2 px-2.5 rounded-lg transition-all duration-300 flex items-center justify-center"
                         title="Ajouter une commande"
                         data-action="click->commands-ui#toggleAddForm"
                     >
@@ -55,7 +52,7 @@
                     {# bouton de login avec icône utilisateur #}
                     <a
                         href="{{ path('app_login') }}"
-                        class="group relative bg-gray-800/50 hover:border-gray-600 text-gray-400 hover:text-white p-2.5 rounded-lg transition-all duration-300 hover:bg-gray-700/50 flex items-center justify-center"
+                        class="group relative bg-gray-800/50 text-gray-400 hover:text-white py-2 px-2.5 rounded-lg transition-all duration-300 hover:bg-gray-700/50 flex items-center justify-center"
                         title="Connectez vous pour ajouter une commande"
                     >
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
