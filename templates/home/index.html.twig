@@ -4,7 +4,7 @@
 
 {% block body %}
     <div class="flex-1 container mx-auto px-4 py-6 max-w-3xl">
-        <!-- Header -->
+        {# Header #}
         <div class="flex items-center gap-3 mb-6">
             <div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -14,10 +14,10 @@
             <h1 class="text-xl font-semibold text-white">Mikro Command Manager</h1>
         </div>
 
-        <!-- Barre d'outils compacte -->
+        {# Barre d'outils compacte #}
         <div class="bg-gray-900/50 backdrop-blur border border-gray-800 rounded-xl p-3 mb-5">
             <div class="flex flex-col sm:flex-row gap-3">
-                <!-- Recherche -->
+                {# Recherche #}
                 <div class="flex-1 relative">
                     <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
@@ -31,7 +31,7 @@
                     >
                 </div>
 
-                <!-- Toggle ajout -->
+                {# Toggle ajout #}
                 <button
                     class="
                         group relative bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-101 w-auto
@@ -52,7 +52,7 @@
                 </button>
             </div>
 
-            <!-- Formulaire d'ajout (collapsible) -->
+            {# Formulaire d'ajout (collapsible) #}
             <div data-commands-ui-target="addFormContainer" class="grid transition-[grid-template-rows] duration-300 ease-out grid-rows-[0fr]">
                 <div class="overflow-hidden">
                     <form data-commands-ui-target="addForm" data-action="submit->commands-ui#submitAddForm" class="pt-3 mt-3 border-t border-gray-800">
@@ -97,16 +97,16 @@
             </div>
         </div>
 
-        <!-- Informations sur les resultats -->
+        {# Informations sur les resultats #}
         <p data-commands-ui-target="resultsInfo" class="text-gray-500 text-xs mb-3"></p>
 
-        <!-- Liste des commandes -->
+        {# Liste des commandes #}
         <div data-commands-ui-target="list" class="space-y-2 mb-6"></div>
 
-        <!-- Pagination -->
+        {# Pagination #}
         <div data-commands-ui-target="pagination" class="flex justify-center"></div>
 
-        <!-- Template pour un élément de commande -->
+        {# Template pour un élément de commande #}
         <template data-commands-ui-target="commandTemplate">
             <div class="group bg-gray-900/50 border border-gray-800 hover:border-gray-700 rounded-lg p-3 command-item transition-all">
                 <div class="flex flex-col gap-2">
@@ -147,7 +147,7 @@
             </div>
         </template>
 
-        <!-- Dialog d'edition -->
+        {# Dialog d'edition #}
         <dialog
             data-commands-ui-target="editDialog"
             class="bg-gray-900 border border-gray-700 rounded-xl p-0"
@@ -206,11 +206,11 @@
             </div>
         </dialog>
 
-        <!-- Toast container -->
+        {# Toast container #}
         <div data-commands-ui-target="toastContainer" class="fixed bottom-16 right-4 space-y-2 z-50"></div>
     </div>
 
-    <!-- Footer -->
+    {# Footer #}
     <footer class="border-t border-gray-800 bg-gray-900/30 backdrop-blur">
         <div class="container mx-auto px-4 py-3 max-w-3xl">
             <div class="flex items-center justify-between text-xs text-gray-500">
