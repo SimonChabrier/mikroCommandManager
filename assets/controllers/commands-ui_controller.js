@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus";
+import { showToast } from "@toasts";
 
 export default class extends Controller {
     static targets = [
@@ -60,7 +61,7 @@ export default class extends Controller {
         this.commandInputTarget.value = "";
         this.toggleAddForm();
 
-        this.showToast("Commande ajoutée !");
+        showToast("Commande ajoutée !", this.toastContainerTarget);
     }
 
     onUpdated(event) {
@@ -73,7 +74,7 @@ export default class extends Controller {
         this.renderCommands();
 
         this.closeEditDialog();
-        this.showToast("Commande mise à jour !");
+        showToast("Commande mise à jour !", this.toastContainerTarget);
     }
 
     onDeleted(event) {
@@ -84,11 +85,11 @@ export default class extends Controller {
         this.renderCommands();
         this.renderPagination();
 
-        this.showToast("Commande supprimée !");
+        showToast("Commande supprimée !", this.toastContainerTarget);
     }
 
     onError(event) {
-        this.showToast(event.detail.message, "error");
+        showToast(event.detail.message, this.toastContainerTarget, "error");
     }
 
     // === Méthodes UI ===
@@ -265,10 +266,10 @@ export default class extends Controller {
         const command = event.currentTarget.dataset.command;
         try {
             await navigator.clipboard.writeText(command);
-            this.showToast("Copié !");
+            showToast("Copié !", this.toastContainerTarget);
         } catch (error) {
             console.error("Erreur lors de la copie:", error);
-            this.showToast("Erreur lors de la copie", "error");
+            showToast("Erreur lors de la copie", this.toastContainerTarget, "error");
         }
     }
 
@@ -309,29 +310,5 @@ export default class extends Controller {
         }
 
         this.dispatch("requestDelete", { detail: { id } });
-    }
-
-    showToast(message, type = "success") {
-        const toastId = `toast-${Date.now()}`;
-        const bgColor = type === "success" ? "bg-green-600" : "bg-red-600";
-        const iconPath = type === "success" ? "M5 13l4 4L19 7" : "M6 18L18 6M6 6l12 12";
-
-        const toast = document.createElement("div");
-        toast.id = toastId;
-        toast.className = `${bgColor} text-white text-sm px-3 py-2 rounded-lg shadow-lg flex items-center gap-2 transition-all duration-300`;
-        toast.innerHTML = `
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${iconPath}"></path>
-            </svg>
-            <span>${message}</span>
-        `;
-
-        this.toastContainerTarget.appendChild(toast);
-
-        setTimeout(() => {
-            toast.style.opacity = "0";
-            toast.style.transform = "translateX(100%)";
-            setTimeout(() => toast.remove(), 300);
-        }, 2000);
     }
 }
