@@ -25,9 +25,11 @@
     </head>
     <body
         class="bg-gray-950 text-gray-100 font-sans min-h-screen flex flex-col h-full"
-        data-controller="commands-ui commands-api"
-        {# ecoute des evénements personnalisés pour la communication entre les contrôleurs Stimulus #}
-        data-action="commands-ui:requestLoad->commands-api#loadCommands commands-ui:requestCreate->commands-api#create commands-ui:requestUpdate->commands-api#update commands-ui:requestDelete->commands-api#delete commands-api:loaded->commands-ui#onLoaded commands-api:created->commands-ui#onCreated commands-api:updated->commands-ui#onUpdated commands-api:deleted->commands-ui#onDeleted commands-api:error->commands-ui#onError"
+        {% if app.current_route == 'app_home' %}
+            data-controller="commands-ui commands-api"
+            {# ecoute des evénements personnalisés pour la communication entre les contrôleurs Stimulus #}
+            data-action="commands-ui:requestLoad->commands-api#loadCommands commands-ui:requestCreate->commands-api#create commands-ui:requestUpdate->commands-api#update commands-ui:requestDelete->commands-api#delete commands-api:loaded->commands-ui#onLoaded commands-api:created->commands-ui#onCreated commands-api:updated->commands-ui#onUpdated commands-api:deleted->commands-ui#onDeleted commands-api:error->commands-ui#onError"
+        {% endif %}
     >
         {% block body %}{% endblock %}
     </body>
