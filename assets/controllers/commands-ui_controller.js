@@ -167,8 +167,9 @@ export default class extends Controller {
                 ? "bg-gray-900/50 text-gray-600 cursor-not-allowed"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 hover:text-white hover:scale-110 hover:shadow-lg"
         }`;
+        prevBtn.setAttribute("aria-label", "Page précédente");
         prevBtn.innerHTML =
-            '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
+            '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
         prevBtn.dataset.page = this.currentPage - 1;
         prevBtn.disabled = this.currentPage === 1;
         prevBtn.dataset.action = "click->commands-ui#goToPage";
@@ -183,6 +184,10 @@ export default class extends Controller {
                     : "bg-gray-800/50 text-gray-400 hover:bg-gray-700 hover:text-white hover:scale-110"
             }`;
             pageBtn.textContent = i;
+            pageBtn.setAttribute("aria-label", `Page ${i}`);
+            if (i === this.currentPage) {
+                pageBtn.setAttribute("aria-current", "page");
+            }
             pageBtn.dataset.page = i;
             pageBtn.dataset.action = "click->commands-ui#goToPage";
             nav.appendChild(pageBtn);
@@ -195,8 +200,9 @@ export default class extends Controller {
                 ? "bg-gray-900/50 text-gray-600 cursor-not-allowed"
                 : "bg-gradient-to-r from-gray-800 to-gray-700 text-gray-300 hover:from-gray-700 hover:to-gray-600 hover:text-white hover:scale-110 hover:shadow-lg"
         }`;
+        nextBtn.setAttribute("aria-label", "Page suivante");
         nextBtn.innerHTML =
-            '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
+            '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
         nextBtn.dataset.page = this.currentPage + 1;
         nextBtn.disabled = this.currentPage === totalPages;
         nextBtn.dataset.action = "click->commands-ui#goToPage";
