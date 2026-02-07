@@ -33,7 +33,10 @@
 
                 <!-- Toggle ajout -->
                 <button
-                    class="group relative bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105"
+                    class="
+                        group relative bg-gradient-to-r from-blue-600 to-blue-500 hover:from-blue-500 hover:to-blue-400 text-white p-2.5 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/30 hover:scale-105 w-auto
+                        flex items-center justify-center gap-1 sm:w-px-10
+                    "
                     title="Ajouter une commande"
                     data-action="click->commands-ui#toggleAddForm"
                 >
@@ -115,7 +118,8 @@
                         <button
                             class="copy-btn opacity-20 group-hover:opacity-100 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-blue-600 hover:to-blue-500 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/20 hover:scale-110"
                             data-action="click->commands-ui#copy"
-                            title="Copier">
+                            title="Copier"
+                        >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path>
                             </svg>
@@ -123,7 +127,8 @@
                         <button
                             class="edit-btn opacity-20 group-hover:opacity-100 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-amber-600 hover:to-amber-500 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-amber-500/20 hover:scale-110"
                             data-action="click->commands-ui#openEditDialog"
-                            title="Modifier">
+                            title="Modifier"
+                        >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
                             </svg>
@@ -131,7 +136,8 @@
                         <button
                             class="delete-btn opacity-20 group-hover:opacity-100 bg-gradient-to-r from-gray-700 to-gray-600 hover:from-red-600 hover:to-red-500 text-gray-300 hover:text-white p-2 rounded-lg transition-all duration-300 hover:shadow-lg hover:shadow-red-500/20 hover:scale-110"
                             data-action="click->commands-ui#confirmDelete"
-                            title="Supprimer">
+                            title="Supprimer"
+                        >
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
                             </svg>
