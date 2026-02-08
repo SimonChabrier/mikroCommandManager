@@ -131,7 +131,7 @@ export default class extends Controller {
 
         if (this.filteredCommands.length === 0) {
             this.listTarget.innerHTML = `
-                <div class="bg-gray-900/50 border border-gray-800 text-gray-400 px-4 py-3 rounded-lg text-sm text-center">
+                <div class="bg-gray-900/50 border border-gray-800 text-gray-100 px-4 py-3 rounded-lg text-sm text-center">
                     Aucune commande trouvée.
                 </div>
             `;
@@ -181,7 +181,7 @@ export default class extends Controller {
             pageBtn.className = `w-8 h-8 rounded-lg text-xs font-medium transition-all duration-300 ${
                 i === this.currentPage
                     ? "bg-gradient-to-r from-blue-600 to-blue-500 text-white shadow-lg shadow-blue-500/30"
-                    : "bg-gray-800/50 text-gray-400 hover:bg-gray-700 hover:text-white hover:scale-110"
+                    : "bg-gray-800/50 text-gray-100 hover:bg-gray-700 hover:text-white hover:scale-110"
             }`;
             pageBtn.textContent = i;
             pageBtn.setAttribute("aria-label", `Page ${i}`);
