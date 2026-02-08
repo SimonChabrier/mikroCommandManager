@@ -7,6 +7,9 @@
         <meta name="author" content="Simon Chabrier">
         <meta name="keywords" content="Linux, Commandes, Terminal, Administration, Réseau, Système, MikroCode">
 
+        {# preload css #}
+        <link rel="preload" as="style" href="{{ asset('styles/app.css') }}">
+
         <title>{% block title %}Gestionnaire de Commandes{% endblock %}</title>
         <link
             rel="icon"
